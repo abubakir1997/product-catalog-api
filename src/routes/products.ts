@@ -152,8 +152,8 @@ productsRouter.post<{}, ProductsCreateResponse, ProductsCreateRequest>('/', asyn
   }
 })
 
-productsRouter.put<{}, ProductsUpdateResponse, ProductsUpdateRequest>('/', async (req, res) => {
-  const id = req.body.id || ''
+productsRouter.put<{ id: string }, ProductsUpdateResponse, ProductsUpdateRequest>('/:id', async (req, res) => {
+  const id = req.params.id || req.body.id || ''
 
   try {
     if (typeof id !== 'string') {
