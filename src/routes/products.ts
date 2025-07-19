@@ -1,9 +1,11 @@
-import { createRandomProduct } from '@/api/createRandomProduct'
 import { getProducts } from '@/api/getProducts'
+import { getRandomProduct } from '@/api/getRandomProduct'
 import { queryProducts } from '@/api/queryProducts'
+import { PRODUCTS_RANDOM_RESPONSE_ERROR } from '@/error/PRODUCTS_RANDOM_RESPONSE_ERROR'
 import { PRODUCTS_RESPONSE_ERROR } from '@/error/PRODUCTS_RESPONSE_ERROR'
 import { SEARCH_PRODUCTS_RESPONSE_ERROR } from '@/error/SEARCH_PRODUCTS_RESPONSE_ERROR'
 import { ProductModel } from '@/schema/product'
+import { ProductsRandomResponse } from '@/types/ProductsRandomResponse'
 import { ProductsRequest } from '@/types/ProductsRequest'
 import { ProductsResponse } from '@/types/ProductsResponse'
 import { SearchProductsRequest } from '@/types/SearchProductsRequest'
@@ -101,13 +103,15 @@ productsRouter.get<{}, ProductsResponse, {}, SearchProductsRequest>('/search', a
   })
 })
 
-productsRouter.get('/create/random', async (req, res) => {
+productsRouter.get<{}, ProductsRandomResponse>('/random', async (req, res) => {
   try {
-    const product = await createRandomProduct()
+    const product = await getRandomProduct()
 
-    res.status(200).send(`Successfully created random product: ${product.sku}`)
-  } catch {
-    res.status(500).send('Failed to create random product')
+    res.status(200).send({ product })
+  } catch (err) {
+    const error = err as Error
+
+    res.status(500).send({ error: PRODUCTS_RANDOM_RESPONSE_ERROR.ERROR(error.message) })
   }
 })
 
