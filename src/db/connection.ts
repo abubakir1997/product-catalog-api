@@ -1,4 +1,5 @@
 import { MongoClient, ServerApiVersion } from 'mongodb'
+import mongoose from 'mongoose'
 
 const uri = process.env.MONGO_DB_URI || ''
 const client = new MongoClient(uri, {
@@ -8,6 +9,8 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   },
 })
+
+mongoose.connect(uri)
 
 async function run() {
   try {

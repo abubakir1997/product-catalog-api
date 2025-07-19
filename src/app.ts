@@ -1,7 +1,9 @@
 import cors from 'cors'
 import express from 'express'
 
-import { productsRouter } from './routes/products'
+import '@/db/connection'
+
+import { productsRouter } from '@/routes/products'
 
 const PORT = process.env.PORT || 3000
 const app = express()
