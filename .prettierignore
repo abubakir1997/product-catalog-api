@@ -19,3 +19,6 @@ dist
 *.tgz
 *.log*
 /.nx/cache
+
+
+!src/*
