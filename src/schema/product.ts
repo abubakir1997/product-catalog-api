@@ -11,4 +11,6 @@ const productSchema = new Schema<Product>({
   brand: String,
 })
 
+productSchema.index({ sku: 'text', name: 'text', description: 'text', category: 'text', brand: 'text' })
+
 export const ProductModel = model('Product', productSchema)
