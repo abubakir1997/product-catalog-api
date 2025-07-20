@@ -59,7 +59,7 @@ productsRouter.get<{}, ProductsResponse, {}, ProductsRequest>('/', async (req, r
 
   return res.json({
     products,
-    total: productTotalCount + 1,
+    total: productTotalCount,
     skip,
     limit,
   })

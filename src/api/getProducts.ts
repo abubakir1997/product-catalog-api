@@ -8,7 +8,7 @@ export async function getProducts(
   limit: number,
   page: number = 0
 ): Promise<Product[]> {
-  const skip = Math.max(page - 1, 0) * limit
+  const skip = page * limit
 
   return ProductModel.find()
     .skip(skip)
