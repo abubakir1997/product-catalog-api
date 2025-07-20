@@ -3,7 +3,7 @@ import type { DummyProductsResponse } from '@/types/DummyProductsResponse'
 import type { Product } from '@/types/Product'
 import { Types } from 'mongoose'
 
-export async function queryProducts(query: string, limit: number, page: number = 0): Promise<Product[]> {
+export async function queryDummyProducts(query: string, limit: number, page: number = 0): Promise<Product[]> {
   const response = await fetch(`${MOCK_API}/products/search?q=${query}&limit=${limit}&skip=${page * limit}`)
   const data = (await response.json()) as DummyProductsResponse
 

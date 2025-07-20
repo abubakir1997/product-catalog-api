@@ -3,7 +3,7 @@ import { DummyProduct } from '@/types/DummyProductsResponse'
 import { Product } from '@/types/Product'
 import { Types } from 'mongoose'
 
-export async function getProduct(index: number): Promise<Product> {
+export async function getDummyProduct(index: number): Promise<Product> {
   const response = await fetch(`${MOCK_API}/products/${index}`)
   const product = (await response.json()) as DummyProduct
 

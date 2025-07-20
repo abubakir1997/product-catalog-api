@@ -3,7 +3,7 @@ import { DummyProductsResponse } from '@/types/DummyProductsResponse'
 import { Product } from '@/types/Product'
 import { Types } from 'mongoose'
 
-export async function getProducts(
+export async function getDummyProducts(
   sortBy: string,
   sortByDirection: 'asc' | 'desc',
   limit: number,

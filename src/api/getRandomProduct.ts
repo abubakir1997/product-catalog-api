@@ -1,4 +1,4 @@
-import { getProduct as getDummyProduct } from '@/mock-api/getProduct'
+import { getDummyProduct } from '@/mock-api/getDummyProduct'
 import { Product } from '@/types/Product'
 import { random } from 'lodash'
 
