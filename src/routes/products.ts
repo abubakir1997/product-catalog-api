@@ -1,9 +1,11 @@
 import { createProduct } from '@/api/createProduct'
 import { deleteProduct } from '@/api/deleteProduct'
+import { deleteProducts } from '@/api/deleteProducts'
 import { getProducts } from '@/api/getProducts'
 import { getRandomProduct } from '@/api/getRandomProduct'
 import { queryProducts } from '@/api/queryProducts'
 import { updateProduct } from '@/api/updateProduct'
+import { PRODUCTS_BULK_DELETE_RESPONSE_ERROR } from '@/error/PRODUCTS_BULK_DELETE_RESPONSE_ERROR'
 import { PRODUCTS_CREATE_RESPONSE_ERROR } from '@/error/PRODUCTS_CREATE_RESPONSE_ERROR'
 import { PRODUCTS_DELETE_RESPONSE_ERROR } from '@/error/PRODUCTS_DELETE_RESPONSE_ERROR'
 import { PRODUCTS_RANDOM_RESPONSE_ERROR } from '@/error/PRODUCTS_RANDOM_RESPONSE_ERROR'
@@ -11,6 +13,7 @@ import { PRODUCTS_RESPONSE_ERROR } from '@/error/PRODUCTS_RESPONSE_ERROR'
 import { PRODUCTS_UPDATE_RESPONSE_ERROR } from '@/error/PRODUCTS_UPDATE_RESPONSE_ERROR'
 import { SEARCH_PRODUCTS_RESPONSE_ERROR } from '@/error/SEARCH_PRODUCTS_RESPONSE_ERROR'
 import { ProductModel } from '@/schema/product'
+import { Product } from '@/types/Product'
 import { ProductsCreateRequest } from '@/types/ProductsCreateRequest'
 import { ProductsCreateResponse } from '@/types/ProductsCreateResponse'
 import { ProductsDeleteRequest } from '@/types/ProductsDeleteRequest'
@@ -22,6 +25,7 @@ import { ProductsUpdateRequest } from '@/types/ProductsUpdateRequest'
 import { ProductsUpdateResponse } from '@/types/ProductsUpdateResponse'
 import { SearchProductsRequest } from '@/types/SearchProductsRequest'
 import { Router } from 'express'
+import { isArray, isString } from 'lodash'
 
 const productsRouter = Router()
 
@@ -178,6 +182,30 @@ productsRouter.put<{ id: string }, ProductsUpdateResponse, ProductsUpdateRequest
     res.status(500).send({ id, error: PRODUCTS_CREATE_RESPONSE_ERROR.ERROR(error.message) })
   }
 })
+
+productsRouter.delete<{}, { ids: string[]; products?: Product[]; error?: string }, { ids: string[] }>(
+  '/bulk-delete',
+  async (req, res) => {
+    const ids = req.body.ids || []
+
+    try {
+      if (!isArray(ids) || ids.some((id) => !isString(id))) {
+        return res.status(400).send({ ids, error: PRODUCTS_BULK_DELETE_RESPONSE_ERROR.INVALID_PRODUCT_IDS(ids) })
+      }
+      if (!ids.filter((id) => id.trim()).length) {
+        return res.status(400).send({ ids, error: PRODUCTS_BULK_DELETE_RESPONSE_ERROR.MISSING_PRODUCT_IDS(ids) })
+      }
+
+      const products = await deleteProducts(ids)
+
+      res.status(200).send({ ids, products })
+    } catch (err) {
+      const error = err as Error
+
+      res.status(500).send({ ids, error: PRODUCTS_BULK_DELETE_RESPONSE_ERROR.ERROR(error.message) })
+    }
+  }
+)
 
 productsRouter.delete<ProductsDeleteRequest, ProductsDeleteResponse>('/:id', async (req, res) => {
   const id = req.params.id || ''
