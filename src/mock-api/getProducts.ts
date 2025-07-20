@@ -1,6 +1,7 @@
 import { MOCK_API } from '@/lib/constants'
 import { DummyProductsResponse } from '@/types/DummyProductsResponse'
 import { Product } from '@/types/Product'
+import { Types } from 'mongoose'
 
 export async function getProducts(
   sortBy: string,
@@ -16,9 +17,9 @@ export async function getProducts(
   return data.products.map(
     (product) =>
       ({
+        _id: new Types.ObjectId(),
         category: product.category,
         description: product.description,
-        id: product.id + '',
         name: product.title,
         brand: product.brand,
         sku: product.sku,
