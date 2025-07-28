@@ -1,7 +1,7 @@
 import { MongoClient, ServerApiVersion } from 'mongodb'
 import mongoose from 'mongoose'
 
-const uri = process.env.MONGODB_URI || process.env.MONGO_DB_URI || ''
+const uri = process.env.MONGO_DB_URI || ''
 
 mongoose.connect(uri, {
   serverSelectionTimeoutMS: 30000,
