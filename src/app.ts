@@ -15,5 +15,3 @@ app.use('/products', productsRouter)
 app.listen(PORT, () => {
   console.log(`🚀 Server ready at: http://localhost:${PORT}`)
 })
-
-export { app }
