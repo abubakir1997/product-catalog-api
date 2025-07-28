@@ -2,29 +2,34 @@ import { MongoClient, ServerApiVersion } from 'mongodb'
 import mongoose from 'mongoose'
 
 const uri = process.env.MONGODB_URI || process.env.MONGO_DB_URI || ''
+
+mongoose.connect(uri, {
+  serverSelectionTimeoutMS: 30000,
+  socketTimeoutMS: 45000,
+  maxPoolSize: 10,
+})
+
+mongoose.connection.on('connected', () => {
+  console.log('✅ Connected to MongoDB')
+})
+
+mongoose.connection.on('error', (err) => {
+  console.error('❌ MongoDB connection error:', err)
+})
+
+mongoose.connection.on('disconnected', () => {
+  console.log('⚠️ MongoDB disconnected')
+})
+
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
     strict: true,
     deprecationErrors: true,
   },
+  serverSelectionTimeoutMS: 30000,
+  socketTimeoutMS: 45000,
+  maxPoolSize: 10,
 })
-
-mongoose.connect(uri)
-
-async function run() {
-  try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect()
-    // Send a ping to confirm a successful connection
-    await client.db('admin').command({ ping: 1 })
-    console.log('Pinged your deployment. You successfully connected to MongoDB!')
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close()
-  }
-}
-
-run().catch(console.dir)
 
 export const db = client.db('products')
