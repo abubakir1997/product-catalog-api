@@ -10,6 +10,11 @@ const app = express()
 
 app.use(cors())
 app.use(express.json())
+
+app.get('/', (_, res) => {
+  res.json({ message: 'Product Catalog API is running', status: 'healthy' })
+})
+
 app.use('/products', productsRouter)
 
 app.listen(PORT, () => {
